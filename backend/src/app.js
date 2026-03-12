@@ -3,12 +3,15 @@ import dotenv from "dotenv"
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import path from "path"
+import cors from "cors";
 
 dotenv.config();
 
 const app = express()
 
 const __dirname = path.resolve()
+
+app.use(cors());
 
 app.get("/hello", (req, res)=> {
   res.send("message this aisklvgs")
