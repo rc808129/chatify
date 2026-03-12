@@ -2,14 +2,29 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { useEffect} from 'react'
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [count, setCount] = useState(0)
+  const [msg, setMsg] = useState("");
+
+   useEffect(() => {
+    fetch(`${API_URL}/hello`)
+      .then(res => res.text())
+    .then(data => {
+  console.log(data);
+  setMsg(data);
+})
+  }, []);
 
   return (
     <>
+
+     <div>
+      <h1>{msg}</h1>
+    </div>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

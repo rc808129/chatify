@@ -10,11 +10,17 @@ const app = express()
 
 const __dirname = path.resolve()
 
+app.get("/hello", (req, res)=> {
+  res.send("message this aisklvgs")
+})
+
 console.log(process.env.PORT)
 const PORT = process.env.PORT || 3000
 
 app.use("/api/auth", authRoutes)
 app.use("/api/messages", messageRoutes)
+
+
 
 if(process.env.NODE_ENV === "production"){
   app.use(express.static(path.join(__dirname, "../frontend/dist")))
