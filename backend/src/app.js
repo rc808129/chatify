@@ -1,47 +1,41 @@
-import express from 'express'
-import dotenv from "dotenv"
-import authRoutes from './routes/auth.route.js';
-import messageRoutes from './routes/message.route.js';
-import path from "path"
+import express from "express";
+import cookieParser from "cookie-parser";
+import path from "path";
 import cors from "cors";
-import { connectDB } from './lib/db.js';
 
-dotenv.config();
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
+import { connectDB } from "./lib/db.js";
+import { ENV } from "./lib/env.js";
+import { app, server } from "./lib/socket.js";
 
-const app = express()
-
-const __dirname = path.resolve() // this point backend subfolder
-
-
-console.log(__dirname, "rajchaurisya;s")  
-
-app.use(cors()); 
-
-app.use(express.json())
-
-app.get("/hello", (req, res)=> {
-  res.send("message this aisklvgs")
-})
-
-console.log(process.env.PORT)
-const PORT = process.env.PORT || 3000
-
-app.use("/api/auth", authRoutes)
-app.use("/api/messages", messageRoutes)
+const __dirname = path.resolve();// return absolute path
 
 
 
-if(process.env.NODE_ENV === "production"){
-  app.use(express.static(path.join(__dirname, "../frontend/dist")))
-// express frontend ki build files browser ko serve kar sake
-  // app.use ak middleware lagaya fir express.static yah middleware method haiiska kam is path par jo folder hai use uski file ko browser ko dena 
- 
-  app.get("*", (_, res)=> {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
-  })
+
+
+const PORT = ENV.PORT || 3000;
+
+app.use(express.json({ limit: "5mb" })); // req.body
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(cookieParser());
+
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
+
+
+// make ready for deployment
+if (ENV.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("*", (_, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
 }
 
-app.listen(PORT, ()=>{
-   console.log("server is running on port:" + PORT)
-   connectDB()
-  })
+server.listen(PORT, () => {
+  console.log("Server running on port: " + PORT);
+  connectDB();
+});
+
