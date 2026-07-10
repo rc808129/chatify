@@ -13,16 +13,20 @@ export const useAuthStore = create((set, get) => ({
   socket: null,
   onlineUsers: [],
 
+  
+
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
       get().connectSocket();
+     
     } catch (error) {
       console.log("Error in authCheck:", error);
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
+        console.log(get(), "raj");
     }
   },
 
@@ -87,8 +91,10 @@ export const useAuthStore = create((set, get) => ({
     const socket = io(BASE_URL, {
       withCredentials: true, // this ensures cookies are sent with the connection
     });
+    console.log(socket,"rajchaursi")
 
     socket.connect();
+    console.log("socket", socket)
 
     set({ socket });
 

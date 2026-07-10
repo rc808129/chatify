@@ -16,3 +16,6 @@ export const sendWelcomeEmail = async (email, name, clientURL) => {
 
   console.log("Welcome Email sent successfully", data);
 };
+
+
+//  await sendWelcomeEmail(savedUser.email, savedUser.fullName, ENV.CLIENT_URL);
